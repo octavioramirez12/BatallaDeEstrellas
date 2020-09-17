@@ -1,0 +1,83 @@
+import EquiposYBatalla.*
+import Personajes.*
+
+describe "test Tulipan y Pamela contra Pocardo y Toro"
+{
+	var gritosGanadores
+	
+	fixture{
+		batalla.equipo1([tulipan, pamela])
+		batalla.equipo2([pocardo, toro])
+		gritosGanadores = batalla.comenzarBatalla()
+	}
+	
+	test "test el ganador es el equipo de tulipan y pamela" {
+		assert.that(gritosGanadores == [tulipan.gritoDeVictoria(), pamela.gritoDeVictoria()])
+	}
+	
+	test "test la energia del equipo1 es de 13600"{
+		
+		assert.that(batalla.energiaDelEquipo(batalla.equipo1()) == 13600)
+	}
+	
+	test "test Toro termina con una manguera y una cinta de pape"{
+		assert.that(toro.inventario() == ["manguera", "cinta de papel"])
+	}
+	
+	test "test a Tulipan le falta su manguera"{
+		assert.that(!(tulipan.inventario().contains("manguera")))
+	}
+	
+	test "test a pamela le falta una cinta de papel"{
+		assert.that(pamela.inventario().filter({objeto => objeto == "cinta de papel"}).size() == 1)
+	}
+}
+
+describe "test Toro y Pamela contra Pocardo y Tulipan"
+{
+	var gritosGanadores
+	
+	fixture{
+		batalla.equipo1([toro, pamela])
+		batalla.equipo2([pocardo, tulipan])
+		gritosGanadores = batalla.comenzarBatalla()
+	}
+	
+	test "test el ganador es el equipo de pocardo y tulipan" {
+		assert.that(gritosGanadores == [pocardo.gritoDeVictoria(), tulipan.gritoDeVictoria()])
+	}
+	
+	test "test la energia del equipo1 es de 7300"{
+		
+		assert.that(batalla.energiaDelEquipo(batalla.equipo1()) == 7300)
+	}
+	
+	test "test Toro termina con cotonetes y una manguera"{
+		assert.that(toro.inventario() == ["cotonetes", "manguera"])
+	}
+	
+	test "test a Tulipan le falta su manguera"{
+		assert.that(!(tulipan.inventario().contains("manguera")))
+	}
+	
+	test "test a Pocardo le faltan los cotonetes"{
+		assert.that(!(pamela.inventario().contains("cotonetes")))
+	}
+}
+
+describe "test inicializar con equipos inválidos"
+{
+	test "test no se puede inicializar equipo 1  con 3 jugadores" {
+		batalla.equipo1([tulipan, toro, pamela])
+		assert.that(batalla.equipo1() == null)
+	}
+	
+	test "test no se puede inicializar equipo 2 con lista vacia"{
+		batalla.equipo2([])
+		assert.that(batalla.equipo2() == null)
+	}
+	
+	test "test no se puede comenzar la batalla sin los equipos inicializados"{
+		assert.that(batalla.comenzarBatalla() == "Se deben setear los equipos primero")
+	}
+}
